@@ -1,0 +1,114 @@
+ujson module not found, using json
+msgpack not installed, MsgPackSerializer unavailable
+[2019-07-04 17:03:57,035 nonebot] ERROR: Failed to import "ultbot.plugins.MonthlyPaySS", error: unexpected EOF while parsing (MonthlyPaySS.py, line 9)
+[2019-07-04 17:03:57,035 nonebot] ERROR: unexpected EOF while parsing (MonthlyPaySS.py, line 9)
+Traceback (most recent call last):
+  File "/usr/local/python3/lib/python3.7/site-packages/nonebot/plugin.py", line 31, in load_plugin
+    module = importlib.import_module(module_name)
+  File "/usr/local/python3/lib/python3.7/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1006, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 724, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 860, in get_code
+  File "<frozen importlib._bootstrap_external>", line 791, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/root/Ultbot/script/ultbot/plugins/MonthlyPaySS.py", line 9
+    now = datetime.now(pytz.timezone
+                                   ^
+SyntaxError: unexpected EOF while parsing
+[2019-07-04 17:03:57,038 nonebot] INFO: Succeeded to import "ultbot.plugins.muteduck"
+[2019-07-04 17:03:57,038 nonebot] INFO: Running on 172.17.0.01:9000
+Running on https://172.17.0.01:9000 (CTRL + C to quit)
+[2019-07-04 17:03:57,039] ASGI Framework Lifespan error, continuing without Lifespan support
+[2019-07-04 17:03:57,042 nonebot] INFO: Scheduler started
+[2019-07-04 17:03:58,318] 172.17.0.2:37562 GET /ws/api/ 1.1 101 - 1158
+[2019-07-04 17:03:58,319] 172.17.0.2:52266 GET /ws/event/ 1.1 101 - 1960
+[2019-07-04 17:04:38,713 nonebot] INFO: Self: 1048616976, Message 1099 from 326090231: 给鸭鸭塞口球
+[2019-07-04 17:04:38,713 nonebot] DEBUG: Parsing command: 给鸭鸭塞口球
+[2019-07-04 17:04:38,713 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:38,713 nonebot] DEBUG: Split command name: ('给鸭鸭塞口球',)
+[2019-07-04 17:04:38,713 nonebot] DEBUG: Command ('给鸭鸭塞口球',) not found
+[2019-07-04 17:04:38,713 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:38,773 nonebot] INFO: Self: 1048616976, Message 1098 from 326090231: 给鸭鸭塞口球
+[2019-07-04 17:04:38,773 nonebot] DEBUG: Parsing command: 给鸭鸭塞口球
+[2019-07-04 17:04:38,773 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:38,773 nonebot] DEBUG: Split command name: ('给鸭鸭塞口球',)
+[2019-07-04 17:04:38,773 nonebot] DEBUG: Command ('给鸭鸭塞口球',) not found
+[2019-07-04 17:04:38,773 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:38,773 nonebot] INFO: Self: 1048616976, Message 1100 from 326090231: 给鸭鸭塞口球
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Parsing command: 给鸭鸭塞口球
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Split command name: ('给鸭鸭塞口球',)
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Command ('给鸭鸭塞口球',) not found
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:38,774 nonebot] INFO: Self: 1048616976, Message 1097 from 326090231: 给鸭鸭塞口球
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Parsing command: 给鸭鸭塞口球
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Split command name: ('给鸭鸭塞口球',)
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Command ('给鸭鸭塞口球',) not found
+[2019-07-04 17:04:38,774 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:38,856 nonebot] DEBUG: Intent commands: []
+[2019-07-04 17:04:38,856 nonebot] DEBUG: No intent command has enough confidence
+[2019-07-04 17:04:39,018 nonebot] DEBUG: Intent commands: []
+[2019-07-04 17:04:39,018 nonebot] DEBUG: No intent command has enough confidence
+[2019-07-04 17:04:39,072 nonebot] INFO: Self: 1048616976, Message 1101 from 1000000@[群:912732378]: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,072 nonebot] DEBUG: Parsing command: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,072 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:39,073 nonebot] DEBUG: Split command name: ('纯爱王(952363797)',)
+[2019-07-04 17:04:39,073 nonebot] DEBUG: Command ('纯爱王(952363797)',) not found
+[2019-07-04 17:04:39,073 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:39,126 nonebot] INFO: Self: 1048616976, Message 1102 from 1000000@[群:912732378]: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Parsing command: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Split command name: ('纯爱王(952363797)',)
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Command ('纯爱王(952363797)',) not found
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:39,126 nonebot] DEBUG: Intent commands: []
+[2019-07-04 17:04:39,126 nonebot] DEBUG: No intent command has enough confidence
+[2019-07-04 17:04:39,182 nonebot] INFO: Self: 1048616976, Message 1103 from 1000000@[群:912732378]: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,182 nonebot] DEBUG: Parsing command: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,182 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:39,182 nonebot] DEBUG: Split command name: ('纯爱王(952363797)',)
+[2019-07-04 17:04:39,182 nonebot] DEBUG: Command ('纯爱王(952363797)',) not found
+[2019-07-04 17:04:39,182 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:39,277 nonebot] INFO: Self: 1048616976, Message 1104 from 1000000@[群:912732378]: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,277 nonebot] DEBUG: Parsing command: 纯爱王(952363797) 被管理员禁言30分钟
+[2019-07-04 17:04:39,277 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:04:39,277 nonebot] DEBUG: Split command name: ('纯爱王(952363797)',)
+[2019-07-04 17:04:39,277 nonebot] DEBUG: Command ('纯爱王(952363797)',) not found
+[2019-07-04 17:04:39,277 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:04:39,359 nonebot] DEBUG: Intent commands: []
+[2019-07-04 17:04:39,359 nonebot] DEBUG: No intent command has enough confidence
+[2019-07-04 17:07:32,202 nonebot] INFO: Self: 1048616976, Message 1105 from 326090231: [CQ:image,file=340E0CFA9234BAC09E6C1794472C97D9.jpg,url=https://c2cpicdw.qpic.cn/offpic_new/326090231//9077b9c8-5f1c-4b4f-8a4a-a5ed17fb34ac/0?vuin=1048616976&amp;amp;term=2]
+[2019-07-04 17:07:32,202 nonebot] DEBUG: Parsing command: [CQ:image,file=340E0CFA9234BAC09E6C1794472C97D9.jpg,url=https://c2cpicdw.qpic.cn/offpic_new/326090231//9077b9c8-5f1c-4b4f-8a4a-a5ed17fb34ac/0?vuin=1048616976&amp;amp;term=2]
+[2019-07-04 17:07:32,202 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:07:32,202 nonebot] DEBUG: Split command name: ('[CQ:image,file=340E0CFA9234BAC09E6C1794472C97D9.jpg,url=https:', '', 'c2cpicdw.qpic.cn', 'offpic_new', '326090231', '', '9077b9c8-5f1c-4b4f-8a4a-a5ed17fb34ac', '0?vuin=1048616976&amp;amp;term=2]')
+[2019-07-04 17:07:32,202 nonebot] DEBUG: Command ('[CQ:image,file=340E0CFA9234BAC09E6C1794472C97D9.jpg,url=https:', '', 'c2cpicdw.qpic.cn', 'offpic_new', '326090231', '', '9077b9c8-5f1c-4b4f-8a4a-a5ed17fb34ac', '0?vuin=1048616976&amp;amp;term=2]') not found
+[2019-07-04 17:07:32,202 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:12:10,200 nonebot] INFO: Self: 1048616976, Message 1106 from 326090231@[群:912732378]: 以下为图片测试
+[2019-07-04 17:12:10,200 nonebot] DEBUG: Parsing command: 以下为图片测试
+[2019-07-04 17:12:10,200 nonebot] DEBUG: Matched command start: (empty)
+[2019-07-04 17:12:10,201 nonebot] DEBUG: Split command name: ('以下为图片测试',)
+[2019-07-04 17:12:10,201 nonebot] DEBUG: Command ('以下为图片测试',) not found
+[2019-07-04 17:12:10,201 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:12:35,491 nonebot] INFO: Self: 1048616976, Message 1107 from 326090231@[群:912732378]: /say &#91;CQ:image,file={4.81-yuanjpg}&#93;
+[2019-07-04 17:12:35,491 nonebot] DEBUG: Parsing command: /say &#91;CQ:image,file={4.81-yuanjpg}&#93;
+[2019-07-04 17:12:35,492 nonebot] DEBUG: Matched command start: /
+[2019-07-04 17:12:35,492 nonebot] DEBUG: Split command name: ('say',)
+[2019-07-04 17:12:35,492 nonebot] DEBUG: Command ('say',) not found
+[2019-07-04 17:12:35,492 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:13:05,618 nonebot] INFO: Self: 1048616976, Message 1108 from 326090231@[群:912732378]: /say &#91;CQ:image,file={4.81-yuan.jpg}&#93;
+[2019-07-04 17:13:05,618 nonebot] DEBUG: Parsing command: /say &#91;CQ:image,file={4.81-yuan.jpg}&#93;
+[2019-07-04 17:13:05,618 nonebot] DEBUG: Matched command start: /
+[2019-07-04 17:13:05,618 nonebot] DEBUG: Split command name: ('say',)
+[2019-07-04 17:13:05,619 nonebot] DEBUG: Command ('say',) not found
+[2019-07-04 17:13:05,619 nonebot] DEBUG: Not a known command, ignored
+[2019-07-04 17:14:06,525 nonebot] INFO: Self: 1048616976, Message 1109 from 326090231@[群:912732378]: /say &#91;CQ:image,file=4.81-yuan.jpg&#93;
+[2019-07-04 17:14:06,525 nonebot] DEBUG: Parsing command: /say &#91;CQ:image,file=4.81-yuan.jpg&#93;
+[2019-07-04 17:14:06,526 nonebot] DEBUG: Matched command start: /
+[2019-07-04 17:14:06,526 nonebot] DEBUG: Split command name: ('say',)
+[2019-07-04 17:14:06,526 nonebot] DEBUG: Command ('say',) not found
+[2019-07-04 17:14:06,526 nonebot] DEBUG: Not a known command, ignored
