@@ -1,7 +1,7 @@
 import nonebot
 from nonebot.typing import Context_T
 from aiocqhttp.exceptions import Error as CQHttpError
-import re
+
 
 bot = nonebot.get_bot()
 
@@ -12,7 +12,7 @@ async def _(ctx: Context_T):
         try:
             await bot.send_private_msg(user_id=326090231,
                                        message='From '+str(ctx['user_id'])
-                                               +':\n\n'+ctx['raw_message'])
+                                               + ':\n\n' + ctx['raw_message'])
 
         except CQHttpError:
             pass

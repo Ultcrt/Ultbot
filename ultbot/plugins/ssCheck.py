@@ -1,0 +1,27 @@
+import os
+import nonebot
+from nonebot import on_command, CommandSession
+from aiocqhttp.exceptions import Error as CQHttpError
+
+ip = '139.180.172.135'
+bot = nonebot.get_bot()
+
+
+@on_command('ssping', only_to_me=False)
+async def ssping(session: CommandSession):
+    if os.system('ping -c 1 -w 1 %s' % ip):
+        try:
+            await bot.send_private_msg(user_id=326090231,
+                                       message='ss has been blocked.'
+                                               '\nPlz fix it in time.')
+            await bot.send_private_msg(user_id=1399677960,
+                                       message='ss has been blocked.'
+                                               '\nPlz fix it in time.')
+            await session.send('ss死了\nUltbot已通知管理者')
+        except CQHttpError:
+            pass
+    else:
+        try:
+            await session.send('ss工作正常，请检察个人网络状态')
+        except CQHttpError:
+            pass
