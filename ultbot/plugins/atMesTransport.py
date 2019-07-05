@@ -11,8 +11,8 @@ async def _(ctx: Context_T):
     if '[CQ:at,qq=326090231]' in ctx['raw_message']:
         try:
             await bot.send_private_msg(user_id=326090231,
-                                       message='From'+ctx['user_id']
-                                               +':\n'+ctx['raw_message'])
+                                       message='From '+str(ctx['user_id'])
+                                               +':\n\n'+ctx['raw_message'])
 
         except CQHttpError:
             pass
