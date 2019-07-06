@@ -9,8 +9,8 @@ bot = nonebot.get_bot()
 
 @on_command('ssping', only_to_me=False)
 async def ssping(session: CommandSession):
-    await session.send('测试可能需要0到15s\n请耐心等待')
-    if os.system('ping -c 3 -w 5 %s' % ip):
+    await session.send('测试可能需要0到30s\n请耐心等待')
+    if os.system('ping -c 5 -w 6 %s' % ip):
         try:
             await bot.send_private_msg(user_id=326090231,
                                        message='ss has been blocked.'
