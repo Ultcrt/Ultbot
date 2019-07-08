@@ -4,13 +4,19 @@ from nonebot import on_command, CommandSession
 from aiocqhttp.exceptions import Error as CQHttpError
 
 ip = '139.180.172.135'
+#ip = 'www.google.com'
 bot = nonebot.get_bot()
 
 
 @on_command('ssping', only_to_me=False)
 async def ssping(session: CommandSession):
     await session.send('测试可能需要0到30s\n请耐心等待')
-    if os.system('ping -c 5 -w 6 %s' % ip):
+    temp = os.popen('ping -c 5 -w 6 %s' %ip)
+    trigger = False
+    for line in temp:
+        if '100% packet loss' in line:
+            trigger = True
+    if trigger:
         try:
             await bot.send_private_msg(user_id=326090231,
                                        message='ss has been blocked.'
