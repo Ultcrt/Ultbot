@@ -6,7 +6,7 @@ from aiocqhttp.exceptions import Error as CQHttpError
 @on_command('mcsinfo', only_to_me=False)
 async def mcsinfo(session: CommandSession):
     result = os.popen('netstat  -anp  |grep 25565').read()
-    if 'LISTEN' not in result:
+    if result:
         try:
             await session.send('Minecraft服务端运行中')
         except CQHttpError:
