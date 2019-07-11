@@ -6,7 +6,7 @@ from aiocqhttp.exceptions import Error as CQHttpError
 bot = nonebot.get_bot()
 
 
-@on_command('mcsreboot',only_to_me=False)
+@on_command('mcsreboot', only_to_me=False)
 async def mcsreboot(session: CommandSession):
     try:
         await bot.senf_private_msg(user_id=326090231,
@@ -21,10 +21,9 @@ async def mcsreboot(session: CommandSession):
         pass
     # 检测服务器是否正在运行
     for string in result:
+        # 如果已经运行则kill后再启动
         if 'java -Xmx1536M -Xms1536M -jar server.jar nogui' in string:
             process_id = list(filter(None, string.split(' ')))[1]
             os.system('kill -9 %s' % process_id)
-            print('KILLLLLLLLLLLLED')
     os.system('cd /opt/mcs/; '
               'nohup java -Xmx1536M -Xms1536M -jar server.jar nogui >/opt/mcs/mcs.log &')
-
