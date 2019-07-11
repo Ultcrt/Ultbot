@@ -15,12 +15,15 @@ async def mcsreboot(session: CommandSession):
     except CQHttpError:
         pass
     result = os.popen('ps -ef | grep server.jar')
-    for string in result:
-        if 'java -Xmx1536M -Xms1536M -jar server.jar nogui' in string:
-            process_id = list(filter(None, string.split(' ', 2)))[1]
-            os.system('kill -9 %s' % process_id)
-    os.system('cd ; bash start_mcs.sh')
     try:
         await session.send('服务器重启中，请等待1min左右')
     except CQHttpError:
         pass
+    # 检测服务器是否正在运行
+    for string in result:
+        if 'java -Xmx1536M -Xms1536M -jar server.jar nogui' in string:
+            process_id = list(filter(None, string.split(' ')))[1]
+            os.system('kill -9 %s' % process_id)
+    os.system('cd /opt/mcs/; '
+              'nohup java -Xmx1536M -Xms1536M -jar server.jar nogui >/opt/mcs/mcs.log &')
+
