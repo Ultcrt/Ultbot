@@ -18,7 +18,7 @@ async def rcl(session: CommandSession):
         for string in result:
             temp += string
             lines_num += 1
-            if lines_num >= 10:
+            if lines_num >= 25:
                 break
         try:
             await session.send(temp)
