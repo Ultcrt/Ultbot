@@ -9,7 +9,7 @@ bot = nonebot.get_bot()
 @on_command('mcsreboot', only_to_me=False)
 async def mcsreboot(session: CommandSession):
     try:
-        await bot.senf_private_msg(user_id=326090231,
+        await bot.send_private_msg(user_id=326090231,
                                    message=str(session.ctx['user_id'])
                                    + ' tried to reboot MCS.')
     except CQHttpError:
