@@ -18,7 +18,7 @@ async def mcsinfo(session: CommandSession):
             pass
     try:
         await session.send('如果无法访问服务器，可以尝试输入‘/mcsreboot’重启Minecraft服务端\n'
-                           '警告：请核实服务器内是否有其他玩家再进行重启'
+                           '警告：请核实服务器内是否有其他玩家再进行重启\n'
                            '注意：重启指令的使用者将上报至管理员')
     except CQHttpError:
         pass
