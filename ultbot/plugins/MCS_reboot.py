@@ -27,3 +27,4 @@ async def mcsreboot(session: CommandSession):
             os.system('kill -9 %s' % process_id)
     os.system('cd /opt/mcs/; '
               'nohup java -Xmx1536M -Xms1536M -jar server.jar nogui >/opt/mcs/mcs.log &')
+    result.close()

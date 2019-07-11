@@ -12,7 +12,7 @@ async def rcl(session: CommandSession):
         except CQHttpError:
             pass
     else:
-        result = os.popen(cl+'')
+        result = os.popen(cl)
         temp = ''
         num = 0
         for string in result:
@@ -24,6 +24,7 @@ async def rcl(session: CommandSession):
             await session.send(temp)
         except CQHttpError:
             pass
+    result.close()
 
 
 @rcl.args_parser

@@ -32,3 +32,4 @@ async def ssping(session: CommandSession):
             await session.send('ss工作正常，请检察个人网络状态')
         except CQHttpError:
             pass
+    temp.close()
