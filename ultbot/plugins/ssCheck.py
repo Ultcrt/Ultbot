@@ -11,7 +11,7 @@ bot = nonebot.get_bot()
 @on_command('ssping', only_to_me=False)
 async def ssping(session: CommandSession):
     await session.send('测试可能需要0到30s\n请耐心等待')
-    temp = os.popen('ping -c 5 -w 6 %s' %ip)
+    temp = os.popen('ping -c 5 -w 6 %s' % ip)
     trigger = False
     for line in temp:
         if '100% packet loss' in line:

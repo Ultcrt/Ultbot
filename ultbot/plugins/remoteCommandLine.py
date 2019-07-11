@@ -14,12 +14,8 @@ async def rcl(session: CommandSession):
     else:
         result = os.popen(cl)
         temp = ''
-        lines_num = 0
         for string in result:
             temp += string
-            lines_num += 1
-            if lines_num >= 25:
-                break
         try:
             await session.send(temp)
         except CQHttpError:
