@@ -24,6 +24,7 @@ async def mcsreboot(session: CommandSession):
         if 'java -Xmx1536M -Xms1536M -jar server.jar nogui' in string:
             process_id = list(filter(None, string.split(' ')))[1]
             os.system('kill -9 %s' % process_id)
+            print('KILLLLLLLLLLLLED')
     os.system('cd /opt/mcs/; '
               'nohup java -Xmx1536M -Xms1536M -jar server.jar nogui >/opt/mcs/mcs.log &')
 
