@@ -3,4 +3,5 @@
 config.py
 __pycache__/
 ultbot/plugins/__pycache__/
-ultbot/plugins/PrivateData/
+
+ultbot/plugins/bdwbCrawler/cookies.py
