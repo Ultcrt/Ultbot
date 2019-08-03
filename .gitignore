@@ -5,3 +5,4 @@ __pycache__/
 ultbot/plugins/__pycache__/
 
 ultbot/plugins/bdwbCrawler/cookies.py
+ultbot/plugins/bdwbCrawler/tmp.html

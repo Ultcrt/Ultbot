@@ -1,5 +1,5 @@
 import requests
-from cookies import weibo_cookie
+from .cookies import weibo_cookie
 
 
 def crawler():
