@@ -1,13 +1,11 @@
-import requests
-from .cookies import weibo_cookie
+from datetime import datetime
+import nonebot
+import pytz
+from aiocqhttp.exceptions import Error as CQHttpError
+from .crawler import crawler
 
 
-def crawler():
-    url = 'https://weibo.cn/u/6314659177'
-    temp = requests.get(url, cookies=weibo_cookie)
-    with open('tmp.html', 'w', encoding='utf-8') as f:
-        f.write(temp.content.decode('utf-8', 'ignore'))
-
-
-if __name__ == '__main__':
+@nonebot.scheduler.scheduled_job('cron', day_of_week='tue', hour=15)
+async def _():
     crawler()
+
