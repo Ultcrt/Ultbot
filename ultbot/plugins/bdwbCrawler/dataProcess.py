@@ -38,16 +38,18 @@ def data_process(html_file_name):
     try:
         bonus_members_raw = \
             re.search(
-                re.compile(r'(将.{5,20}?的成员（.{15,45}?）编入乐队)|(将.{15,45}?这几位成员编入乐队)'),
+                re.compile(r'(将.{5,20}?的成员（.{3,50}?）编入乐队)|(将.{3,50}?这几位成员编入乐队)'
+                           r'|(将特定角色（.{3,50}?）编入乐队)'),
                 event_text).group(0)
         # 获取成员名列表
-        bonus_members_list = list(filter(None, re.split(re.compile(r'[将（米歇尔）这的成员编入乐队、]'),
-                                                        bonus_members_raw)))
+        bonus_members_list = list(filter(
+            None,
+            re.split(re.compile(r'[将（米歇尔）这的成员编入乐队、特定角色]'), bonus_members_raw)))
         # 获取成员名（乐队名）字符串
         bonus_members = ''
         for each_member in bonus_members_list:
             bonus_members += (each_member + ';')
-    except AttributeError:
+    except TabError:
         bonus_members = 'ERROR'
 
     # 获取新增4星成员
@@ -72,24 +74,22 @@ def data_process(html_file_name):
         end_datetime = cur_year + '-' + datetime_list[2] + '-' + datetime_list[3] + ' ' + datetime_list[4] + ':' \
                                 + datetime_list[5] + ':00'
     except AttributeError:
-        start_datetime = '0000-00-00 00:00:00'
-        end_datetime = '0000-00-00 00:00:00'
+        # 区别于数据库时间默认值
+        start_datetime = '1111-11-11 11:11:11'
+        end_datetime = '1111-11-11 11:11:11'
 
     # 活动信息储存在dict中
-    event_info = {
-        'event_name': event_name,
-        'event_type': event_type,
-        'bonus_type': bonus_type,
-        'bonus_members': bonus_members,
-        'new_rank_four_members': new_rank_four_members,
-        'start_datetime': start_datetime,
-        'end_datetime': end_datetime,
-    }
+    event_info = [
+        event_name,
+        event_type,
+        bonus_type,
+        bonus_members,
+        new_rank_four_members,
+        start_datetime,
+        end_datetime,
+    ]
 
     return event_info
 
 
-if __name__ == '__main__':
-    tmp = data_process('tmp_2.html')
-    for n in tmp:
-        print(tmp.get(n))
+
