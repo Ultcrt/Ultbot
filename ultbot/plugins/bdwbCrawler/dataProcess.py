@@ -44,7 +44,7 @@ def data_process(html_file_name):
         # 获取成员名列表
         bonus_members_list = list(filter(
             None,
-            re.split(re.compile(r'[将（米歇尔）这的成员编入乐队、特定角色]'), bonus_members_raw)))
+            re.split(re.compile(r'[将（米歇尔）这的成员编入乐队、几位特定角色]'), bonus_members_raw)))
         # 获取成员名（乐队名）字符串
         bonus_members = ''
         for each_member in bonus_members_list:
@@ -70,6 +70,12 @@ def data_process(html_file_name):
         datetime_text = re.search(
             re.compile(r'活动举办时间：\d{1,2}月\d{1,2}日维护后~\d{1,2}月\d{1,2}日\d{1,2}:\d{1,2}'), event_text).group(0)
         datetime_list = re.findall(re.compile(r'\d{1,2}'), datetime_text)
+        # 填补0
+        counter = 0
+        while counter <= 5:
+            if len(datetime_list[counter]) == 1:
+                datetime_list[counter] = '0' + datetime_list[counter]
+            counter += 1
         start_datetime = cur_year + '-' + datetime_list[0] + '-' + datetime_list[1] + ' 15:00:00'
         end_datetime = cur_year + '-' + datetime_list[2] + '-' + datetime_list[3] + ' ' + datetime_list[4] + ':' \
                                 + datetime_list[5] + ':00'

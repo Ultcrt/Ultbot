@@ -3,8 +3,8 @@ import nonebot
 from nonebot import on_command, CommandSession
 from aiocqhttp.exceptions import Error as CQHttpError
 
-ip = '139.180.172.135'
-# ip = 'www.google.com'
+ip = '43.224.33.80'
+
 bot = nonebot.get_bot()
 
 

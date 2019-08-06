@@ -20,6 +20,8 @@ def write_to_db(event_info, user_info):
                        event_info)
         # 提交活动数据
         cntr.commit()
+    cursor.close()
     cntr.close()
+
 
 

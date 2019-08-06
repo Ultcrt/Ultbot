@@ -21,7 +21,9 @@ def get_event_url(html_file_name):
         entrance_ini = find_result.parent
         url_suffix = entrance_ini.find(text='全文').parent.attrs['href'].split('?')[0]
         entrance = url_prefix + url_suffix
-        print(entrance)
+        return entrance
+    else:
+        return None
 
 
 
