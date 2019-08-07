@@ -119,7 +119,7 @@ async def _(session: CommandSession):
         # 没有任何参数输入则给出指南
         else:
             session.finish('使用指南：\n/findall_events [搜索对象] [匹配字符]'
-                           '\ne.g.\n/findall_events event_name 小兔子脱逃中！\n'
+                           '\n\ne.g.\n/findall_events event_name 小兔子脱逃中！\n\n'
                            '其中有效的[搜索对象]为：\n'
                            'event_name\n'
                            'event_type\n'
