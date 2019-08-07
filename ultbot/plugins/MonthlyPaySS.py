@@ -5,7 +5,7 @@ from aiocqhttp.exceptions import Error as CQHttpError
 
 
 @nonebot.scheduler.scheduled_job('cron', day=4, hour=12)
-async def _():
+async def monthly_pay():
     bot = nonebot.get_bot()
     now = datetime.now(pytz.timezone('Asia/Shanghai'))
     try:

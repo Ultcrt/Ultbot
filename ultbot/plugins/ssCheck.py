@@ -3,13 +3,11 @@ import nonebot
 from nonebot import on_command, CommandSession
 from aiocqhttp.exceptions import Error as CQHttpError
 
-ip = '43.224.33.80'
-
-bot = nonebot.get_bot()
-
 
 @on_command('ssping', only_to_me=False)
 async def ssping(session: CommandSession):
+    ip = '43.224.33.80'
+    bot = nonebot.get_bot()
     await session.send('测试可能需要0到30s\n请耐心等待')
     temp = os.popen('ping -c 5 -w 6 %s' % ip)
     trigger = False

@@ -3,5 +3,6 @@
 config.py
 __pycache__/
 ultbot/plugins/__pycache__/
-ultbot/plugins/bdwbCrawler/privateConfig.py
+ultbot/plugins/bdEvent/privateConfig.py
 *.html
+ultbot/plugins/bdEvent/privateConfig.py

@@ -8,7 +8,7 @@ from nonebot import on_command, CommandSession, permission as perm
 
 
 @nonebot.scheduler.scheduled_job('cron', day_of_week='tue', hour=15)
-async def bdwb_crawler():
+async def bd_crawler():
     # 邦邦微博主页储存在tmp_root，活动详情储存在tmp_detail
     tmp_root = 'tmp_root.html'
     tmp_detail = 'tmp_detail.html'
@@ -47,11 +47,3 @@ async def bdwb_crawler():
     except CQHttpError:
         pass
 
-
-@on_command('test', only_to_me=False, permission=perm.SUPERUSER)
-async def _(session: CommandSession):
-    await bdwb_crawler()
-    try:
-        await session.send('Done.')
-    except CQHttpError:
-        pass
