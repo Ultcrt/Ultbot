@@ -6,17 +6,10 @@
 日期 10000 bbnz
 
 
-<<<<<<< HEAD
-检索 100000 find
-寻 100000 find
-找 100000 find
-查 100000 find
-搜 100000 find
-=======
 搜索 10000 find
 查找 10000 find
 寻找 10000 find
 检索 10000 find
 搜寻 10000 find
 查询 10000 find
->>>>>>> parent of 2fdac87... Update bd_dict.txt
+
