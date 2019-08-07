@@ -58,7 +58,7 @@ async def findall_events(session: CommandSession):
     # 两边添加%并配合LIKE可以不严格匹配
     detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
     # 规范化日期格式
-    if elem == 'start_datetime' or elem == 'end_datetime':
+    if elem == 'start_time' or elem == 'end_time':
         detail = re.sub(re.compile(r'[./]'), '-', detail)
     cntr = mysql.connector.connect(host=user_info['host'],
                                    user=user_info['user'],
@@ -134,8 +134,8 @@ async def _(session: NLPSession):
         '加成属性': 'bonus_type',
         '加成成员': 'bonus_members',
         '新增成员': 'new_rank_four_members',
-        '开始日期': 'start_datetime',
-        '结束日期': 'end_datetime',
+        '开始日期': 'start_time',
+        '结束日期': 'end_time',
     }
     confidence = 0.0
     stripped_msg = session.msg_text.strip()
