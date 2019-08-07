@@ -65,7 +65,7 @@ async def findall_events(session: CommandSession):
     if elem == 'start_time' or elem == 'end_time':
         detail = re.sub(re.compile(r'[./]'), '-', detail)
         command = \
-            'SELECT * FROM event WHERE DATEDIFF(%s, %s) = 0' % (elem, detail)
+            'SELECT * FROM event WHERE DATEDIFF(%s, \'%s\') = 0' % (elem, detail)
     else:
         command = \
             'SELECT * FROM event WHERE %s LIKE \'%s\'' % (elem, detail)
