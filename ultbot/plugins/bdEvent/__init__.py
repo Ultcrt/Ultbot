@@ -55,20 +55,25 @@ async def bd_new_event_process():
 @on_command('findall_events', only_to_me=False)
 async def findall_events(session: CommandSession):
     elem = session.state['event_elem']
-    # 两边添加%并配合LIKE可以不模糊匹配
     # 避免if中产生局部变量
     global detail
-    detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
-    # 规范化日期格式
-    # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
+    detail = session.get('detail', prompt='请输入需要匹配的字符串：')
+
     # 日期与字符串的匹配处理不同
-    if elem == 'start_time' or elem == 'end_time':
+    # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
+    if elem == 'date':
+        # 规范化日期格式
         detail = re.sub(re.compile(r'[./]'), '-', detail)
         command = \
-            'SELECT * FROM event WHERE DATEDIFF(%s, \'%s\') = 0' % (elem, detail)
+            'SELECT * FROM event WHERE ' \
+            'DATEDIFF(\'%s\', start_time) BETWEEN 0 AND 5' % (detail, )
+        print(command)
     else:
+        # 两边添加%并配合LIKE可以不模糊匹配
+        detail = '%' + detail + '%'
         command = \
             'SELECT * FROM event WHERE %s LIKE \'%s\'' % (elem, detail)
+
     cntr = mysql.connector.connect(host=user_info['host'],
                                    user=user_info['user'],
                                    password=user_info['password'],
@@ -141,8 +146,7 @@ async def _(session: NLPSession):
         '加成属性': 'bonus_type',
         '加成成员': 'bonus_members',
         '新增成员': 'new_rank_four_members',
-        '开始日期': 'start_time',
-        '结束日期': 'end_time',
+        '日期': 'date',
     }
     confidence = 0.0
     stripped_msg = session.msg_text.strip()
@@ -164,8 +168,3 @@ async def _(session: NLPSession):
                 intent_elem = word.word
     return IntentCommand(confidence, 'findall_events',
                          current_arg=event_dict[intent_elem])
-
-
-
-
-
