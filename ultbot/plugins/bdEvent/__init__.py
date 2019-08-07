@@ -56,9 +56,9 @@ async def bd_new_event_process():
 async def findall_events(session: CommandSession):
     elem = session.state['event_elem']
     # 两边添加%并配合LIKE可以不模糊匹配
-    detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
     # 避免if中产生局部变量
     global detail
+    detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
     # 规范化日期格式
     # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
     # 日期与字符串的匹配处理不同
