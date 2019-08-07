@@ -8,6 +8,7 @@ from jieba import posseg
 import jieba
 from nonebot import on_command, CommandSession, on_natural_language, NLPSession, IntentCommand
 import mysql.connector
+import re
 
 
 @nonebot.scheduler.scheduled_job('cron', day_of_week='tue', hour=15)
@@ -56,6 +57,9 @@ async def findall_events(session: CommandSession):
     elem = session.state['event_elem']
     # 两边添加%并配合LIKE可以不严格匹配
     detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
+    # 规范化日期格式
+    if elem == 'start_datetime' or elem == 'end_datetime':
+        detail = re.sub(re.compile(r'[./]'), '-', detail)
     cntr = mysql.connector.connect(host=user_info['host'],
                                    user=user_info['user'],
                                    password=user_info['password'],
@@ -151,7 +155,6 @@ async def _(session: NLPSession):
                 confidence += 40.0
                 event_elem_once = False
                 intent_elem = word.word
-
     return IntentCommand(confidence, 'findall_events',
                          current_arg=event_dict[intent_elem])
 
