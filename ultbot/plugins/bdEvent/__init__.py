@@ -125,7 +125,8 @@ async def _(session: CommandSession):
                            'event_type\n'
                            'bonus_type\n'
                            'bonus_members\n'
-                           'new_rank_four_members')
+                           'new_rank_four_members\n'
+                           'date')
     # session.get提示输入后再次执行指令
     else:
         # session.get提示输入后若用户输入无效字符则终止指令执行
