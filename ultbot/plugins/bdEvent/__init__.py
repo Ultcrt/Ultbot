@@ -55,7 +55,7 @@ async def bd_new_event_process():
 @on_command('findall_events', only_to_me=False)
 async def findall_events(session: CommandSession):
     elem = session.state['event_elem']
-    # 两边添加%并配合LIKE可以不严格匹配
+    # 两边添加%并配合LIKE可以不模糊匹配
     detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
     # 规范化日期格式
     if elem == 'start_time' or elem == 'end_time':
@@ -67,7 +67,9 @@ async def findall_events(session: CommandSession):
                                    auth_plugin='mysql_native_password')
     cursor = cntr.cursor()
     # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
-    command = 'SELECT * FROM event WHERE %s LIKE \'%s\'' % (elem, detail)
+    # 使用 CONVERT 是为了将时间转换为字符串进行匹配
+    command = \
+        'SELECT * FROM event WHERE CONVERT(VARCHAR, %s, 120) LIKE \'%s\'' % (elem, detail)
     cursor.execute(command)
     result = cursor.fetchall()
     if not result:
