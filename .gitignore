@@ -5,4 +5,4 @@ __pycache__/
 ultbot/plugins/__pycache__/
 ultbot/plugins/bdEvent/privateConfig.py
 *.html
-ultbot/plugins/bdEvent/privateConfig.py
+
