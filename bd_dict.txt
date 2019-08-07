@@ -6,12 +6,8 @@
 日期 10000 bbnz
 
 
-搜索 10000 find
-查找 10000 find
-寻找 10000 find
 检索 10000 find
-搜寻 10000 find
-查询 10000 find
+寻 10000 find
 找 10000 find
 查 10000 find
 搜 10000 find
