@@ -57,19 +57,24 @@ async def findall_events(session: CommandSession):
     elem = session.state['event_elem']
     # 两边添加%并配合LIKE可以不模糊匹配
     detail = '%' + session.get('detail', prompt='请输入需要匹配的字符串：') + '%'
+    # 避免if中产生局部变量
+    global detail
     # 规范化日期格式
+    # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
+    # 日期与字符串的匹配处理不同
     if elem == 'start_time' or elem == 'end_time':
         detail = re.sub(re.compile(r'[./]'), '-', detail)
+        command = \
+            'SELECT * FROM event WHERE DATEDIFF(%s, %s) = 0' % (elem, detail)
+    else:
+        command = \
+            'SELECT * FROM event WHERE %s LIKE \'%s\'' % (elem, detail)
     cntr = mysql.connector.connect(host=user_info['host'],
                                    user=user_info['user'],
                                    password=user_info['password'],
                                    database=user_info['db_name'],
                                    auth_plugin='mysql_native_password')
     cursor = cntr.cursor()
-    # 使用 '%s LIKE %s',(elem, detail) 无法正常识别elem，这是由于mysql中%s会自动补充''
-    # 使用 CONVERT 是为了将时间转换为字符串进行匹配
-    command = \
-        'SELECT * FROM event WHERE CONVERT(VARCHAR, %s, 120) LIKE \'%s\'' % (elem, detail)
     cursor.execute(command)
     result = cursor.fetchall()
     if not result:
