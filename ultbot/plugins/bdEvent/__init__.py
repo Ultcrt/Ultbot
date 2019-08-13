@@ -23,7 +23,7 @@ async def bd_new_event_process():
     # 获取活动详情页url
     detail_url = get_event_url(tmp_root)
     # 爬取活动详情页，爬取失败返回None
-    if detail_url:
+    if not detail_url:
         raise ValueError
     else:
         crawler(detail_url, weibo_cookie, tmp_detail)
