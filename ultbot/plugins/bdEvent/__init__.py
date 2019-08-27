@@ -179,10 +179,10 @@ async def _(session: NLPSession):
 
 
 @on_command('manual_fetch', only_to_me=False, permission=perm.SUPERUSER)
-def manual_fetch(session: CommandSession):
+async def manual_fetch(session: CommandSession):
     try:
-        bd_new_event_process()
+        await bd_new_event_process()
     except ValueError:
-        session.send('Value Error.')
+        await session.send('Value Error.')
         return
-    session.send('Successfully fetched.')
+    await session.send('Successfully fetched.')
