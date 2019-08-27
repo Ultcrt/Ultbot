@@ -16,7 +16,8 @@ def get_event_url(html_file_name):
     with open(html_file_name, 'r', encoding="utf-8") as f:
         tmp = f.read()
     soup = BeautifulSoup(tmp, 'lxml')
-    find_result = soup.find(text=re.compile(r'游戏内将开启「.+」活动'))
+    find_result = soup.find(text=re.compile(r'游戏内将开启「.+?」活动'))
+    print(find_result)
     if find_result is not None:
         entrance_ini = find_result.parent
         url_suffix = entrance_ini.find(text='全文').parent.attrs['href'].split('?')[0]

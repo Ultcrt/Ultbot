@@ -185,4 +185,4 @@ async def manual_fetch(session: CommandSession):
     except ValueError:
         await session.send('Value Error.')
         return
-    await session.send('Successfully fetched.')
+    await session.send('Successfully Fetched.')
