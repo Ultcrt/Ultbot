@@ -6,7 +6,8 @@ from .dataProcess import data_process
 from .write_to_db import write_to_db
 from jieba import posseg
 import jieba
-from nonebot import on_command, CommandSession, on_natural_language, NLPSession, IntentCommand
+from nonebot import on_command, CommandSession, \
+    on_natural_language, NLPSession, IntentCommand, permission as perm
 import mysql.connector
 import re
 
@@ -175,3 +176,13 @@ async def _(session: NLPSession):
                 intent_elem = word.word
     return IntentCommand(confidence, 'findall_events',
                          current_arg=event_dict[intent_elem])
+
+
+@on_command('manual_fetch', only_to_me=False, permission=perm.SUPERUSER)
+def manual_fetch(session: CommandSession):
+    try:
+        bd_new_event_process()
+    except ValueError:
+        session.send('Value Error.')
+        return
+    session.send('Successfully fetched.')
