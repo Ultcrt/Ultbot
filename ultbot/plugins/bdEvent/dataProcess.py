@@ -21,9 +21,13 @@ def data_process(html_file_name):
     except AttributeError:
         event_name = 'ERROR'
 
-    # 获取活动类型 目前国服只有协力，不知道官方通知格式，此处暂时默认全部为协力
+    # 获取活动类型
     try:
-        event_type = '协力'
+        if re.search(re.compile(r'挑战演出'), event_text) is not None:
+            event_type = 'CP'
+        else:
+            event_type = '协力'
+
     except AttributeError:
         event_type = 'ERROR'
 
