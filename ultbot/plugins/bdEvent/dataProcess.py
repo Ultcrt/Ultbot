@@ -33,7 +33,7 @@ def data_process(html_file_name):
 
     # 获取活动加成属性
     try:
-        bonus_type_raw = re.search(re.compile(r'(将.{4,8}?属性的成员编入乐队)'
+        bonus_type_raw = re.search(re.compile(r'(将.{4,8}?属性的成员编入乐队)|'
                                               r'(属性加成（提升\d{2}%）：.{4,8}?属性)'), event_text).group(0)
         bonus_type = re.search(re.compile(r'(HAPPY)|(PURE)|(POWERFUL)|(COOL)'), bonus_type_raw).group(0)
     except AttributeError:
@@ -50,7 +50,7 @@ def data_process(html_file_name):
         # 获取成员名列表
         bonus_members_list = list(filter(
             None,
-            re.split(re.compile(r'[：将（米歇尔）这的成员编入乐队、几位特定角色]'), bonus_members_raw)))
+            re.split(re.compile(r'[：将（米歇尔）这的成员编入乐队、几位特定角色加提升\d%]'), bonus_members_raw)))
         # 获取成员名（乐队名）字符串
         bonus_members = ''
         for each_member in bonus_members_list:
