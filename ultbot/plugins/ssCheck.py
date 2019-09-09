@@ -6,7 +6,7 @@ from aiocqhttp.exceptions import Error as CQHttpError
 
 @on_command('ssping', only_to_me=False)
 async def ssping(session: CommandSession):
-    ip = '45.77.25.40'
+    ip = '155.138.143.151'
     bot = nonebot.get_bot()
     await session.send('测试可能需要0到30s\n请耐心等待')
     temp = os.popen('ping -c 5 -w 6 %s' % ip)
