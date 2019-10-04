@@ -30,9 +30,6 @@ def new_json_fetch(json_file_type):
             time_counter(0.3)
             json_crawler(url_path + key + '.json', local_path + key + '.json')
             result.append(key + '.json')
-        # 当遇到小于等于最大序号的key时直接跳出（已存在）
-        else:
-            break
     if json_file_type == 'events':
         for each in result:
             event_to_db(each, user_info)
