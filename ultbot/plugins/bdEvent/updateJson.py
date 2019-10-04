@@ -18,15 +18,14 @@ def new_json_fetch(json_file_type):
     local_path += '/'
     json_dir = os.listdir(local_path)
     # 排序后获取最大的json文件序号
-    json_dir.sort(key=lambda x: int(x[:-5]))
-    last_json_id = int(json_dir[-1].split('.')[0])
-    # 用Key倒序dict以减少比较次数
-    tmp = sorted(tmp, key=lambda x: int(x), reverse=True)
+    # 之前使用的排序方法：
+    # json_dir.sort(key=lambda x: int(x[:-5]))
+    # tmp = sorted(tmp, key=lambda x: int(x))
     # 记录下载的json序号，以便录入数据库和通知用户
     result = []
     for key in tmp:
-        # dict中存在大于本地最大序号的json文件信息则下载
-        if int(key) > last_json_id:
+        # dict中存在本地不存在的json文件信息则下载
+        if key + '.json' not in json_dir:
             # 等待0.3秒
             time_counter(0.3)
             json_crawler(url_path + key + '.json', local_path + key + '.json')
