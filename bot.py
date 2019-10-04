@@ -4,6 +4,7 @@ import nonebot
 
 import config
 
+# 此脚本为入口，所有的相对位置都是以这个脚本为起点
 if __name__ == '__main__':
     nonebot.init(config)
     nonebot.load_builtin_plugins()

@@ -1,111 +1,158 @@
-import pytz
-from datetime import datetime
-from bs4 import BeautifulSoup
-import re
+from .imageTransport import image_to_coolq_file
+import time
+import json
+
+characters = {
+    1: '戸山 香澄',
+    2: '花園 たえ',
+    3: '牛込 りみ',
+    4: '山吹 沙綾',
+    5: '市ヶ谷 有咲',
+    6: '美竹 蘭',
+    7: '青葉 モカ',
+    8: '上原 ひまり',
+    9: '宇田川 巴',
+    10: '羽沢 つぐみ',
+    11: '弦巻 こころ',
+    12: '瀬田 薫',
+    13: '北沢 はぐみ',
+    14: '松原 花音',
+    15: '奥沢 美咲',
+    16: '丸山 彩',
+    17: '氷川 日菜',
+    18: '白鷺 千聖',
+    19: '大和 麻弥',
+    20: '若宮 イヴ',
+    21: '湊 友希那',
+    22: '氷川 紗夜',
+    23: '今井 リサ',
+    24: '宇田川 あこ',
+    25: '白金 燐子',
+}
+
+eventTypes = {
+    'versus': '对邦',
+    'story': '协力',
+    'mission_live': '任务',
+    'challenge': 'CP',
+    'live_try': '试炼',
+}
+
+skills = {
+    1: '得分提升10%',
+    2: '得分提升30%',
+    3: '得分提升60%',
+    4: '得分提升100%',
+    5: '判定强化(中)&得分提升10%',
+    6: '判定强化(大)&得分提升20%',
+    7: '判定强化(特大)&得分提升40%',
+    8: '生命回复(中)&得分提升10%',
+    9: '生命回复(大)&得分提升20%',
+    10: '生命回复(特大)&得分提升40%',
+    11: '判定强化(中)&得分提升30%',
+    12: '判定强化(大)&得分提升60%',
+    13: '生命回复300&得分提升30%',
+    14: '生命回复450&得分提升60%',
+    15: '生命回复300&判定强化(中)',
+    16: '生命回复450&判定强化(大)',
+    17: '生命900以上则得分提升65%',
+    18: '生命900以上则得分提升110%',
+    20: '仅在PERFECT时得分提升115%',
+    21: '生命600以上则得分提升40%否则生命回复450',
+    22: '生命600以上则得分提升80%否则生命回复500',
+    23: '无敌并且得分提升10%',
+    24: '无敌并且得分提升30%',
+    25: '评分低于GREAT之前得分提升65%',
+    26: '评分低于GREAT之前得分提升110%',
+}
 
 
-# 获取活动信息
-def data_process(html_file_name):
-    with open(html_file_name, 'r', encoding="utf-8") as f:
-        tmp = f.read()
+def event_process(json_dict):
+    # 将图片移动到'/data/image/'
+    image_to_coolq_file('./bandori_data/image/events/' + json_dict['bannerAssetBundleName'] + '.png', 'tmp.png')
+    # 生成奖励成员字符串
+    new_members_string = ''
+    for each in json_dict['rewardCards']:
+        with open('./bandori_data/json/cards/' + str(each) + '.json', 'r', encoding='utf-8') as f:
+            tmp = json.load(f)
+        new_members_string += '★' + str(tmp['rarity']) + ' ' + \
+                              tmp['attribute'] + ' ' + characters[tmp['characterId']] + '(' + \
+                              str(each) + ')\n'
+    # 生成加成成员字符串
+    characters_string = ''
+    for each_characters in json_dict['characters']:
+        characters_string += characters[int(each_characters['characterId'])] + \
+                             '(' + str(each_characters['percent']) + ')\n'
+    result = '%s\n'\
+             '[CQ:image,file=tmp.png]\n'\
+             '活动类型：\n%s\n\n'\
+             '加成属性：\n%s(%d%%)\n\n'\
+             '加成成员：\n' \
+             '%s\n'\
+             '奖励成员：\n'\
+             '%s\n'\
+             '持续时间：\n'\
+             '%s\n'\
+             '至\n%s'\
+             % (json_dict['eventName'][0],
+                eventTypes[json_dict['eventType']],
+                json_dict['attributes'][0]['attribute'], json_dict['attributes'][0]['percent'],
+                characters_string,
+                new_members_string,
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['startAt'][0])/1000)),
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['endAt'][0])/1000)))
+    return result
 
-    # 获取活动详情文本
-    soup = BeautifulSoup(tmp, 'lxml')
-    event_text = soup.find(text=re.compile(r'(亲爱的各位)|(各位亲爱的)BanG Dreamer')).parent.text
 
-    # 获取活动名
+def card_process(json_dict):
+    # 将图片移动到'/data/image/'
+    # 部分其他服独占卡牌的图片不做处理（爬取时储存为错误格式图片，显示效果为换行）
+    result = ''
+    image_to_coolq_file('./bandori_data/image/cards/' +
+                        json_dict['resourceSetName'] + '/card_normal.png', 'cn.png')
+    result += '%s\n[CQ:image,file=cn.png]\n' % (json_dict['prefix'][0], )
+    # 检查是否可以特训
+    if json_dict['rarity'] >= 3:
+        image_to_coolq_file('./bandori_data/image/cards/' +
+                            json_dict['resourceSetName'] + '/card_after_training.png', 'cat.png')
+        result += '[CQ:image,file=cat.png]\n'
+    result += '人物：★%d %s\n'\
+              '属性：%s\n'\
+              '技能：\n%s'\
+              % (json_dict['rarity'], characters[json_dict['characterId']],
+                 json_dict['attribute'],
+                 skills[json_dict['skillId']],
+                 )
+    return result
+
+
+def gacha_process(json_dict):
+    # 将图片移动到'/data/image/'
+    # 判断是否存在bannerAssetBundleName（部分台湾卡池和飞机池不存在此属性,活动和卡牌不存在此问题）
+    image_name_cq = '[CQ:image,file=tmp.png]'
     try:
-        event_name_raw = re.search(re.compile(r'游戏内将开启「.+?」活动'), event_text).group(0)
-        event_name_with_quotes = re.search(re.compile(r'「.+?」'), event_name_raw).group(0)
-        event_name = list(filter(None, re.split(re.compile(r'[「」]'), event_name_with_quotes)))[0]
-    except AttributeError:
-        event_name = 'ERROR'
-
-    # 获取活动类型
-    try:
-        if re.search(re.compile(r'挑战演出'), event_text) is not None:
-            event_type = 'CP'
-        else:
-            event_type = '协力'
-
-    except AttributeError:
-        event_type = 'ERROR'
-
-    # 获取活动加成属性
-    try:
-        bonus_type_raw = re.search(re.compile(r'(将.{4,8}?属性的成员编入乐队)|'
-                                              r'(属性加成（提升\d{2}%）：.{4,8}?属性)'), event_text).group(0)
-        bonus_type = re.search(re.compile(r'(HAPPY)|(PURE)|(POWERFUL)|(COOL)'), bonus_type_raw).group(0)
-    except AttributeError:
-        bonus_type = 'ERROR'
-
-    # 获取活动加成成员
-    try:
-        bonus_members_raw = \
-            re.search(
-                re.compile(r'(将.{5,20}?的成员（.{3,50}?）编入乐队)|'
-                           r'(将.{5,20}?的成员编入乐队并进行演出，可以触发角色加成)|'
-                           r'(将.{3,50}?这几位成员编入乐队)|'
-                           r'(将特定角色（.{3,50}?）编入乐队)|'
-                           r'(角色加成（提升\d{2}?%）：.{5,20}?成员)'),
-                event_text).group(0)
-        # 获取成员名列表
-        bonus_members_list = list(filter(
-            None,
-            re.split(re.compile(r'[并进行演出，可以触发'
-                                r'：将（米歇尔）这的成员编入乐队、几位特定角色加提升\d%]'),
-                     bonus_members_raw)))
-        # 获取成员名（乐队名）字符串
-        bonus_members = ''
-        for each_member in bonus_members_list:
-            bonus_members += (each_member + ';')
-    except TabError:
-        bonus_members = 'ERROR'
-
-    # 获取新增4星成员
-    try:
-        # 获取新增成员名列表
-        new_rank_four_members_list = re.findall(r'★4.+?\[.+?\]', event_text)
-        # 获取新增成员名字符串
-        new_rank_four_members = ''
-        for each_member in new_rank_four_members_list:
-            new_rank_four_members += (each_member + ';')
-    except AttributeError:
-        new_rank_four_members = 'ERROR'
-
-    # 获取活动开始、结束时间
-    cur_datetime = datetime.now(pytz.timezone('Asia/Shanghai'))
-    cur_year = cur_datetime.strftime("%Y")
-    try:
-        datetime_text = re.search(
-            re.compile(r'活动举办时间：\d{1,2}月\d{1,2}日维护后~\d{1,2}月\d{1,2}日\d{1,2}:\d{1,2}'), event_text).group(0)
-        datetime_list = re.findall(re.compile(r'\d{1,2}'), datetime_text)
-        # 填补0
-        counter = 0
-        while counter <= 5:
-            if len(datetime_list[counter]) == 1:
-                datetime_list[counter] = '0' + datetime_list[counter]
-            counter += 1
-        start_datetime = cur_year + '-' + datetime_list[0] + '-' + datetime_list[1] + ' 15:00:00'
-        end_datetime = cur_year + '-' + datetime_list[2] + '-' + datetime_list[3] + ' ' + datetime_list[4] + ':' \
-                                + datetime_list[5] + ':00'
-    except AttributeError:
-        # 区别于数据库时间默认值
-        start_datetime = '1111-11-11 11:11:11'
-        end_datetime = '1111-11-11 11:11:11'
-
-    # 活动信息储存在dict中
-    event_info = [
-        event_name,
-        event_type,
-        bonus_type,
-        bonus_members,
-        new_rank_four_members,
-        start_datetime,
-        end_datetime,
-    ]
-
-    return event_info
-
-
-
+        image_to_coolq_file('./bandori_data/image/gacha/' +
+                            json_dict['bannerAssetBundleName'] + '.png', 'tmp.png')
+    except KeyError:
+        image_name_cq = '无图片'
+    # 记录PICKUP卡牌ID并返回，以便发送卡池信息时可以利用id和card_process发送发牌详细信息
+    pick_up_cards_id = []
+    all_cards_in_gacha = json_dict['details'][0]
+    for key in all_cards_in_gacha:
+        if all_cards_in_gacha[key]['pickup']:
+            pick_up_cards_id.append(str(key) + '.json')
+    result = '%s\n' \
+             '%s\n' \
+             '卡池类型：\n%s\n' \
+             '持续时间：\n' \
+             '%s\n' \
+             '至\n%s' \
+             % (json_dict['gachaName'][0],
+                image_name_cq,
+                json_dict['type'],
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['publishedAt'][0]) / 1000)),
+                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['closedAt'][0]) / 1000)))
+    if len(pick_up_cards_id) > 0:
+        result += '\n活动卡牌(PICK UP)如下:'
+    print(result)
+    return result, pick_up_cards_id
