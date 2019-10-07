@@ -6,7 +6,16 @@ import os
 def card_image_crawler(json_dict):
     # 默认根位置
     path = './bandori_data/image/cards/'
-    url = 'https://bestdori.com/assets/jp/characters/resourceset/'
+    url = ''
+    # 检测是否为独占
+    if json_dict['prefix'][0] is not None:
+        url = 'https://bestdori.com/assets/jp/characters/resourceset/'
+    elif json_dict['prefix'][1] is not None:
+        url = 'https://bestdori.com/assets/en/characters/resourceset/'
+    elif json_dict['prefix'][2] is not None:
+        url = 'https://bestdori.com/assets/tw/characters/resourceset/'
+    elif json_dict['prefix'][3] is not None:
+        url = 'https://bestdori.com/assets/cn/characters/resourceset/'
     # 特定卡面位置
     path += json_dict['resourceSetName'] + '/'
     url += json_dict['resourceSetName'] + '_rip/'
@@ -33,6 +42,7 @@ def card_image_crawler(json_dict):
 def banner_image_crawler(save_path, json_dict):
     # 默认根位置
     url = 'https://bestdori.com/assets/jp/homebanner_rip/'
+    # 不检测是否为独占，由于封面信息只录入日服信息
     # 某些json可能不包含图片信息，因此捕获KeyError
     try:
         save_path += json_dict['bannerAssetBundleName'] + '.png'

@@ -10,17 +10,17 @@ def gacha_to_db(file_name_without_path, user_info):
     json_file_path = './bandori_data/json/gacha/' + file_name_without_path
     with open(json_file_path, 'r', encoding='utf-8') as f:
         tmp = json.load(f)
+    start_tmp = tmp['publishedAt'][0]
+    end_tmp = tmp['closedAt'][0]
+    # 检查卡池是否不存在于日服(数据库的检索只支持日服时间,目前只有台湾扭蛋卡池比较奇葩)
+    if start_tmp is None:
+        return
     banner_image_crawler('./bandori_data/image/gacha/', tmp)
     cntr = mysql.connector.connect(host=user_info['host'],
                                    user=user_info['user'],
                                    password=user_info['password'],
                                    database=user_info['db_name'],
                                    auth_plugin='mysql_native_password')
-    start_tmp = tmp['publishedAt'][0]
-    end_tmp = tmp['closedAt'][0]
-    # 检查卡池是否不存在于日服(数据库的检索只支持日服时间,目前只有台湾扭蛋卡池比较奇葩)
-    if start_tmp is None:
-        return
     cursor = cntr.cursor()
     # 检测活动数据是否已经存在,利用传入活动名称不存在于数据表时，返回list长度为0
     cursor.execute('SELECT jsonFileName FROM gacha WHERE jsonFileName = %s', (file_name_without_path,))
