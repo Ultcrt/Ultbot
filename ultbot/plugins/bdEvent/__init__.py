@@ -473,10 +473,7 @@ async def manual_fetch(session: CommandSession):
         await session.send('Processing...')
     except CQHttpError:
         pass
-    try:
-        await data_daily_update()
-    except Exception as e:
-        await session.send(str(e))
+    await data_daily_update()
     try:
         await session.send('Done')
     except CQHttpError:

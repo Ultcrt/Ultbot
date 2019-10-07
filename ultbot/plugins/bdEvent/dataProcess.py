@@ -133,25 +133,33 @@ def gacha_process(json_dict):
     try:
         image_to_coolq_file('./bandori_data/image/gacha/' +
                             json_dict['bannerAssetBundleName'] + '.png', 'tmp.png')
-    except KeyError:
-        image_name_cq = '无图片'
-    # 记录PICKUP卡牌ID并返回，以便发送卡池信息时可以利用id和card_process发送发牌详细信息
-    pick_up_cards_id = []
-    all_cards_in_gacha = json_dict['details'][0]
-    for key in all_cards_in_gacha:
-        if all_cards_in_gacha[key]['pickup']:
-            pick_up_cards_id.append(str(key) + '.json')
-    result = '%s\n' \
-             '%s\n' \
-             '卡池类型：\n%s\n' \
-             '持续时间：\n' \
-             '%s\n' \
-             '至\n%s' \
-             % (json_dict['gachaName'][0],
-                image_name_cq,
-                json_dict['type'],
-                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['publishedAt'][0]) / 1000)),
-                time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['closedAt'][0]) / 1000)))
-    if len(pick_up_cards_id) > 0:
-        result += '\n活动卡牌(PICK UP)如下:'
-    return result, pick_up_cards_id
+    # 飞机池会报错KeyError，其他服卡池会报错KeyError或FileNotFoundError
+    # 把飞机池和其他服池图片都设置为飞机池(其他服池会在之后利用TypeError再分支处理)
+    except (KeyError, FileNotFoundError):
+        image_to_coolq_file('./bandori_data/image/gacha/' +
+                            'gacha_flight.png', 'tmp.png')
+    # 非日服卡池抛出TypeError
+    try:
+        # 记录PICKUP卡牌ID并返回，以便发送卡池信息时可以利用id和card_process发送发牌详细信息
+        pick_up_cards_id = []
+        all_cards_in_gacha = json_dict['details'][0]
+        for key in all_cards_in_gacha:
+            if all_cards_in_gacha[key]['pickup']:
+                pick_up_cards_id.append(str(key) + '.json')
+        result = '%s\n' \
+                 '%s\n' \
+                 '卡池类型：\n%s\n' \
+                 '持续时间：\n' \
+                 '%s\n' \
+                 '至\n%s' \
+                 % (json_dict['gachaName'][0],
+                    image_name_cq,
+                    json_dict['type'],
+                    time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['publishedAt'][0]) / 1000)),
+                    time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['closedAt'][0]) / 1000)))
+        if len(pick_up_cards_id) > 0:
+            result += '\n活动卡牌(PICK UP)如下:'
+        return result, pick_up_cards_id
+    except TypeError:
+        return '其他服独有卡池，不进行记录', []
+
