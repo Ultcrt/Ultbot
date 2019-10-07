@@ -65,7 +65,8 @@ async def data_daily_update():
         for each_id in id_list:
             with open('./bandori_data/json/cards/' + each_id, 'r', encoding='utf-8') as f_card:
                 tmp_card = json.load(f_card)
-            await bot.send_group_msg(card_process(tmp_card))
+            await bot.send_group_msg(group_id=912732378,
+                                     message=card_process(tmp_card))
 
 
 @on_command('findall_events', only_to_me=False)

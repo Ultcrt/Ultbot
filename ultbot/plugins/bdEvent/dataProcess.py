@@ -154,5 +154,4 @@ def gacha_process(json_dict):
                 time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(json_dict['closedAt'][0]) / 1000)))
     if len(pick_up_cards_id) > 0:
         result += '\n活动卡牌(PICK UP)如下:'
-    print(result)
     return result, pick_up_cards_id
