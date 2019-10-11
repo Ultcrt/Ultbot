@@ -82,7 +82,7 @@ def event_process(json_dict):
     characters_string = ''
     for each_characters in json_dict['characters']:
         characters_string += characters[int(each_characters['characterId'])] + \
-                             '(' + str(each_characters['percent']) + ')\n'
+                             '(' + str(each_characters['percent']) + '%)\n'
     result = '%s\n'\
              '[CQ:image,file=tmp.png]\n'\
              '活动类型：\n%s\n\n'\
