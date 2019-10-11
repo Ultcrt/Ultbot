@@ -19,43 +19,43 @@ import json
 @nonebot.scheduler.scheduled_job('cron', hour=13)
 async def data_daily_update():
     bot = nonebot.get_bot()
+    # 卡牌更新
+    result_cards = new_json_fetch('cards')
     # 活动更新
-    result = new_json_fetch('events')
+    result_events = new_json_fetch('events')
+    # 卡池更新
+    result_gacha = new_json_fetch('gacha')
     # 通知管理员
     try:
-        await bot.send_private_msg(user_id='326090231', message='events' + str(result))
+        await bot.send_private_msg(user_id='326090231', message='events' + str(result_events))
     except CQHttpError:
         pass
     # 存在更新则发布更新
-    for unit in result:
+    for unit in result_events:
         with open('./bandori_data/json/events/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg = event_process(update_json_tmp)
         await bot.send_group_msg(group_id=912732378,
                                  message='本日活动更新：\n' + msg)
-    # 卡牌更新
-    result = new_json_fetch('cards')
     # 通知管理员
     try:
-        await bot.send_private_msg(user_id='326090231', message='cards' + str(result))
+        await bot.send_private_msg(user_id='326090231', message='cards' + str(result_cards))
     except CQHttpError:
         pass
     # 存在更新则发布更新
-    for unit in result:
+    for unit in result_cards:
         with open('./bandori_data/json/cards/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg = card_process(update_json_tmp)
         await bot.send_group_msg(group_id=912732378,
                                  message='本日卡牌更新：\n' + msg)
-    # 卡池更新
-    result = new_json_fetch('gacha')
     # 通知管理员
     try:
-        await bot.send_private_msg(user_id='326090231', message='gacha' + str(result))
+        await bot.send_private_msg(user_id='326090231', message='gacha' + str(result_gacha))
     except CQHttpError:
         pass
     # 存在更新则发布更新
-    for unit in result:
+    for unit in result_gacha:
         with open('./bandori_data/json/gacha/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg, id_list = gacha_process(update_json_tmp)
