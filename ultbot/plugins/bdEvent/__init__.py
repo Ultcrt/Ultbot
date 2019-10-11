@@ -14,9 +14,9 @@ import json
 
 
 # 在__init__.py使用装饰器才能正常调用
-# 更新时根据日本时间每天15点（大陆时间14点）
+# 更新时根据日本时间每天14点（大陆时间13点）
 # 每日更新只对新增的json进行更新
-@nonebot.scheduler.scheduled_job('cron', hour=14)
+@nonebot.scheduler.scheduled_job('cron', hour=13)
 async def data_daily_update():
     bot = nonebot.get_bot()
     # 活动更新
