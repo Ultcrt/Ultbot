@@ -223,7 +223,7 @@ async def _(session: CommandSession):
         # 参数数目不正确则给出指南
         else:
             session.finish('使用指南：\n/findall_cards [搜索对象] [匹配字符]'
-                           '\n\ne.g.\n/findall_cards 1:pure:4:1\n\n'
+                           '\n\ne.g.\n/findall_cards info 1:pure:4:1\n\n'
                            '其中有效的[搜索对象]为：\n'
                            'info [成员ID:属性:稀有度:技能](技能可以省略)\n'
                            'prefix'
