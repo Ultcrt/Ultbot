@@ -35,6 +35,7 @@ async def data_daily_update():
         with open('./bandori_data/json/events/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg = event_process(update_json_tmp)
+        await bot.send_private_msg(user_id='326090231', message='本日活动更新：\n' + msg)
         await bot.send_group_msg(group_id=912732378,
                                  message='本日活动更新：\n' + msg)
     # 通知管理员
@@ -47,6 +48,7 @@ async def data_daily_update():
         with open('./bandori_data/json/cards/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg = card_process(update_json_tmp)
+        await bot.send_private_msg(user_id='326090231', message='本日卡牌更新：\n' + msg)
         await bot.send_group_msg(group_id=912732378,
                                  message='本日卡牌更新：\n' + msg)
     # 通知管理员
@@ -59,14 +61,17 @@ async def data_daily_update():
         with open('./bandori_data/json/gacha/' + unit, 'r', encoding='utf-8') as f:
             update_json_tmp = json.load(f)
         msg, id_list = gacha_process(update_json_tmp)
+        await bot.send_private_msg(user_id='326090231', message='本日卡池更新：\n' + msg)
         await bot.send_group_msg(group_id=912732378,
                                  message='本日卡池更新：\n' + msg)
         # PICKUP卡牌信息处理
         for each_id in id_list:
             with open('./bandori_data/json/cards/' + each_id, 'r', encoding='utf-8') as f_card:
                 tmp_card = json.load(f_card)
+            msg = card_process(tmp_card)
+            await bot.send_private_msg(user_id='326090231', message=msg)
             await bot.send_group_msg(group_id=912732378,
-                                     message=card_process(tmp_card))
+                                     message=msg)
 
 
 @on_command('findall_events', only_to_me=False)
