@@ -4,6 +4,7 @@ config.py
 __pycache__/
 ultbot/plugins/__pycache__/
 ultbot/plugins/bdEvent/privateConfig.py
+venv/
 *.html
 *.json
 *.png
