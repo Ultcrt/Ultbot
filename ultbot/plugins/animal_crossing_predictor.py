@@ -145,7 +145,7 @@ def submit_to_web(string: str):
 async def picture_process(table):
     # 初始化图片对象及字体
     img = Image.new('RGB', (0, 0), (255, 255, 255, 255))
-    font = ImageFont.truetype(os.getcwd() + 'sarasa-fixed-cl-regular.TTF', 22)
+    font = ImageFont.truetype('./sarasa-fixed-cl-regular.TTF', 22)
     # 初始化画笔
     draw = ImageDraw.Draw(img)
     # 实际尺寸
