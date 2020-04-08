@@ -11,6 +11,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import prettytable
 from PIL import Image, ImageDraw, ImageFont
+from nonebot import on_command, CommandSession
 
 bot = nonebot.get_bot()
 
@@ -31,7 +32,7 @@ async def price_submit(ctx: Context_T):
         target = ctx['group_id']
     cur_price = int(flag.group(2))
     # 更新本地数据
-    price_history = data_update(cur_price, str(target))
+    price_history = daily_update(cur_price, str(target))
     # 将结果转化为字符串
     string = to_string(price_history)
     # 上传至网页并返回结果
@@ -45,25 +46,55 @@ async def price_submit(ctx: Context_T):
         await bot.send_group_msg(group_id=target, message='[CQ:image,file=tmp.png]')
 
 
-def data_update(cur_price, target):
+@on_command('turnip', only_to_me=False)
+def update(session: CommandSession):
+    user_id = session.event['user_id']
+    path = pathlib.Path('./animal_crossing_data/' + str(user_id) + '.json')
+    price_history = read_json(path)
+    command_lines = session.current_arg_text.split(' ')
+    if len(command_lines) == 0:
+        print('样例：/turnip del-1am,2am new-2am:0')
+    for command in command_lines:
+        args = command.split('-')
+        param = args[1].split(',')
+        if args[0] == 'del':
+            for each in param:
+                price_history.pop(each.upper())
+        elif args[0] == 'new':
+            for each in param:
+                raw_item = each.split(':')
+                item = {raw_item[0].upper(): int(raw_item[1])}
+                price_history.update(item)
+
+
+def daily_update(cur_price, target):
     # 查看是否存在用户记录
-    price_history = {}
     path = pathlib.Path('./animal_crossing_data/' + target + '.json')
     # 存在则读取
-    if path.is_file():
-        with open(path, 'r', encoding='utf-8') as f:
-            price_history = json.load(f)
+    price_history = read_json(path)
     # 获取当前时间
     now = datetime.now(pytz.timezone('Asia/Shanghai'))
     key = ''
     # 周日不分上下午
+    # 更新价格信息, weekday返回0~6, 加1便于理解
     if now.weekday() == 6:
         key = str(now.weekday() + 1)
     else:
         key = str(now.weekday() + 1)+now.strftime('%p')
-    # 更新价格信息, weekday返回0~6, 加1便于理解
     price_history.update({key: cur_price})
-    # 写入json文件
+    # 写入文件
+    write_to_json(price_history, path)
+
+
+def read_json(path):
+    price_history = {}
+    if path.is_file():
+        with open(path, 'r', encoding='utf-8') as f:
+            price_history = json.load(f)
+    return price_history
+
+
+def write_to_json(price_history: dict, path):
     with open(path, "w", encoding='utf-8') as f:
         json.dump(price_history, f)
     return price_history
