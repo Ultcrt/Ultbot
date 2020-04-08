@@ -5,6 +5,11 @@ import pathlib
 from nonebot.typing import Context_T
 import re
 import pytz
+from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import prettytable
+import PIL
 
 # bot = nonebot.get_bot()
 
@@ -21,8 +26,12 @@ async def price_submit(ctx: Context_T):
     cur_price = int(flag.group(2))
     # 更新本地数据
     price_history = data_update(cur_price, ctx)
-    # 计算结果
-    calculate(price_history)
+    # 将结果转化为字符串
+    string = to_string(price_history)
+    # 上传至网页并返回结果
+    table = submit_to_web(string)
+    # 一般上传数据肯定是想要查询结果，因此直接调用图片生成函数
+    picture_process(table)
 
 
 def data_update(cur_price, ctx: Context_T):
@@ -49,14 +58,102 @@ def data_update(cur_price, ctx: Context_T):
     return price_history
 
 
-def calculate(price_history):
+def to_string(price_history):
+    string = ''
+    # 共7天，从星期一到日
+    for i in range(1,8):
+        key = str(i)
+        # 周日在开头（不用判断i是否为7，data_update中确保只有7能单独作为key）
+        if key in price_history:
+            string = str(price_history[key]) + ' ' + string
+        else:
+            # 搜索i的上午
+            if key + 'AM' in price_history:
+                string += str(price_history[key+'AM'])+'/'
+            else:
+                string += '/'
+            # 搜索i的下午
+            if key + 'PM' in price_history:
+                string += str(price_history[key+'PM'])+' '
+            else:
+                string += ' '
+    return string
+
+
+def submit_to_web(string: str):
+    # 无GUI配置
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    # 打开网页
+    url = 'https://www.tgbus.com/gametools/DWSYH_DTC/'
+    browser = webdriver.Chrome(executable_path="./chromedriver", options=chrome_options)
+    browser.get(url)
+    # 获取输入框与确认按钮
+    input_field = browser.find_element_by_xpath('//input[@name="inlineInput"]')
+    button = browser.find_element_by_xpath('//input[@onclick="onInlinePredictionButtonClick()"]')
+    # 输入数据并提交
+    input_field.send_keys(string)
+    button.click()
+    # 获取结果
+    soup = BeautifulSoup(browser.page_source, "html.parser")
+    raw_body = soup.find('tbody', id='predictionTableBody')
+    html_table = raw_body.parent
+    raw_field = html_table.find('thead')
+    # 删除多余field
+    field_list = raw_field.find_all('tr')
+    field_list[0].extract()
+    field_list[2].extract()
+    # 补充field
+    tag = soup.new_tag('th')
+    tag.string = '类型1'
+    field_list[1].insert(0, tag)
+    tag = soup.new_tag('th')
+    tag.string = '类型2'
+    field_list[1].insert(1, tag)
+    tag = soup.new_tag('th')
+    tag.string = '购入价格'
+    field_list[1].insert(2, tag)
+    # 修改row
+    for row in raw_body.find_all('tr'):
+        # th改为td
+        error_elem_list = row.find_all('th')
+        for elem in error_elem_list:
+            elem.name = 'td'
+        # 连续下跌没有type2, 需要补充一列空
+        if len(error_elem_list) == 1:
+            tag = soup.new_tag('td')
+            tag.string = '-'
+            row.insert(1, tag)
+    # 表格构建
+    table = prettytable.from_html(str(html_table))
+    print(table[0])
+    return table
     
 
-
-if __name__ == '__main__':
-    price_history = {}
-    now = datetime.now()
-    price_history.update({str(now.weekday() + 1) + now.strftime('%p'): 22})
-    print(price_history)
+# async def picture_process(table):
 
 
+if __name__ == "__main__":
+    result = ''
+    price_history = {"7": 104,  "1PM": 78, "2AM": 117,  "3AM": 145, "3PM": 169}
+    # 共7天，从星期一到日
+    for i in range(1, 8):
+        key = str(i)
+        # 周日在开头（不用判断i是否为7，data_update中确保只有7能单独作为key）
+        if key in price_history:
+            result = str(price_history[key]) + ' ' + result
+        else:
+            # 搜索i的上午
+
+            if key + 'AM' in price_history:
+                result = result + str(price_history[key + 'AM']) + '/'
+            else:
+                result = result + '/'
+            # 搜索i的下午
+            if key + 'PM' in price_history:
+                result += str(price_history[key + 'PM']) + ' '
+            else:
+                result += ' '
+    print(result)

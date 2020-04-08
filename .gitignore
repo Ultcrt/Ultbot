@@ -8,5 +8,6 @@ venv/
 *.html
 *.json
 *.png
+*.ttf
 chromedriver
 chromedriver.exe
