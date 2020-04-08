@@ -42,7 +42,7 @@ async def price_submit(ctx: Context_T):
 
 
 @on_command('turnip', only_to_me=False)
-def update(session: CommandSession):
+async def update(session: CommandSession):
     user_id = session.event['user_id']
     path = get_path(user_id)
     price_history = read_json(path)
