@@ -25,14 +25,9 @@ async def price_submit(ctx: Context_T):
         # 格式错误，不响应
         return
     # 格式正确则读取并继续程序
-    target = ''
-    if ctx['message_type'] == 'private':
-        target = ctx['user_id']
-    elif ctx['message_type'] == 'group':
-        target = ctx['group_id']
     cur_price = int(flag.group(2))
     # 更新本地数据
-    price_history = daily_update(cur_price, str(target))
+    price_history = daily_update(cur_price, ctx['user_id'])
     # 将结果转化为字符串
     string = to_string(price_history)
     # 上传至网页并返回结果
@@ -41,15 +36,15 @@ async def price_submit(ctx: Context_T):
     await picture_process(table)
     # 发送图片
     if ctx['message_type'] == 'private':
-        await bot.send_private_msg(user_id=target, message='[CQ:image,file=tmp.png]')
+        await bot.send_private_msg(user_id=ctx['user_id'], message='[CQ:image,file=tmp.png]')
     elif ctx['message_type'] == 'group':
-        await bot.send_group_msg(group_id=target, message='[CQ:image,file=tmp.png]')
+        await bot.send_group_msg(group_id=ctx['group_id'], message='[CQ:image,file=tmp.png]')
 
 
 @on_command('turnip', only_to_me=False)
 def update(session: CommandSession):
     user_id = session.event['user_id']
-    path = pathlib.Path('./animal_crossing_data/' + str(user_id) + '.json')
+    path = get_path(user_id)
     price_history = read_json(path)
     command_lines = session.current_arg_text.split(' ')
     if len(command_lines) == 0:
@@ -59,17 +54,36 @@ def update(session: CommandSession):
         param = args[1].split(',')
         if args[0] == 'del':
             for each in param:
-                price_history.pop(each.upper())
+                if each in price_history:
+                    price_history.pop(each.upper())
         elif args[0] == 'new':
             for each in param:
                 raw_item = each.split(':')
                 item = {raw_item[0].upper(): int(raw_item[1])}
                 price_history.update(item)
+    # 将结果写入
+    write_to_json(price_history, path)
+    # 将结果转化为字符串
+    string = to_string(price_history)
+    # 上传至网页并返回结果
+    table = submit_to_web(string)
+    # 生成图片
+    await picture_process(table)
+    # 发送图片
+    await session.send(message='[CQ:image,file=tmp.png]')
 
 
-def daily_update(cur_price, target):
+def get_path(user_id):
+    # 获取当前时间
+    now = datetime.now(pytz.timezone('Asia/Shanghai')).isocalendar()
+    date_string = str(now[0]) + '-' + str(now[1])
+    return pathlib.Path('./animal_crossing_data/' + str(user_id) +
+                        '-' + date_string + '.json')
+
+
+def daily_update(cur_price, user_id):
     # 查看是否存在用户记录
-    path = pathlib.Path('./animal_crossing_data/' + target + '.json')
+    path = get_path(user_id)
     # 存在则读取
     price_history = read_json(path)
     # 获取当前时间
@@ -84,6 +98,7 @@ def daily_update(cur_price, target):
     price_history.update({key: cur_price})
     # 写入文件
     write_to_json(price_history, path)
+    return price_history
 
 
 def read_json(path):
