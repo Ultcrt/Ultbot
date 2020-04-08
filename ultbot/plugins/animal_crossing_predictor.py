@@ -37,7 +37,7 @@ async def price_submit(ctx: Context_T):
     # 上传至网页并返回结果
     table = submit_to_web(string)
     # 生成图片
-    picture_process(table)
+    await picture_process(table)
     # 发送图片
     if ctx['message_type'] == 'private':
         await bot.send_private_msg(user_id=target, message='[CQ:image,file=tmp.png]')
@@ -142,10 +142,10 @@ def submit_to_web(string: str):
     return table
     
 
-def picture_process(table):
+async def picture_process(table):
     # 初始化图片对象及字体
     img = Image.new('RGB', (0, 0), (255, 255, 255, 255))
-    font = ImageFont.truetype('./sarasa-fixed-cl-regular.TTF', 22)
+    font = ImageFont.truetype(os.getcwd() + 'sarasa-fixed-cl-regular.TTF', 22)
     # 初始化画笔
     draw = ImageDraw.Draw(img)
     # 实际尺寸
