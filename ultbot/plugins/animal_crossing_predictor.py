@@ -2,6 +2,7 @@ import nonebot
 from datetime import datetime
 import json
 import pathlib
+import os
 from nonebot.typing import Context_T
 import re
 import pytz
@@ -9,12 +10,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import prettytable
-import PIL
+from PIL import Image, ImageDraw, ImageFont
 
-# bot = nonebot.get_bot()
+bot = nonebot.get_bot()
 
 
-#@bot.on_message('private')
+@bot.on_message()
 async def price_submit(ctx: Context_T):
     # 获得价格数据
     flag = re.match(r"^(t)(\d{1,3})$", ctx['raw_message'])
@@ -23,21 +24,31 @@ async def price_submit(ctx: Context_T):
         # 格式错误，不响应
         return
     # 格式正确则读取并继续程序
+    target = ''
+    if ctx['message_type'] == 'private':
+        target = str(ctx['user_id'])
+    elif ctx['message_type'] == 'group':
+        target = str(ctx['group_id'])
     cur_price = int(flag.group(2))
     # 更新本地数据
-    price_history = data_update(cur_price, ctx)
+    price_history = data_update(cur_price, target)
     # 将结果转化为字符串
     string = to_string(price_history)
     # 上传至网页并返回结果
     table = submit_to_web(string)
-    # 一般上传数据肯定是想要查询结果，因此直接调用图片生成函数
-    picture_process(table)
+    # 生成图片
+    await picture_process(table)
+    # 发送图片
+    if ctx['message_type'] == 'private':
+        await bot.send_private_msg(user_id=target, message='[CQ:image,file=tmp.png]')
+    elif ctx['message_type'] == 'group':
+        await bot.send_group_msg(group_id=target, message='[CQ:image,file=tmp.png]')
 
 
-def data_update(cur_price, ctx: Context_T):
+def data_update(cur_price, target):
     # 查看是否存在用户记录
     price_history = {}
-    path = pathlib.Path('./animal_crossing_data/' + ctx['user_id'] + '.json')
+    path = pathlib.Path('./animal_crossing_data/' + target + '.json')
     # 存在则读取
     if path.is_file():
         with open(path, 'r', encoding='utf-8') as f:
@@ -128,32 +139,22 @@ def submit_to_web(string: str):
             row.insert(1, tag)
     # 表格构建
     table = prettytable.from_html(str(html_table))
-    print(table[0])
     return table
     
 
-# async def picture_process(table):
+async def picture_process(table):
+    # 初始化图片对象及字体
+    img = Image.new('RGB', (0, 0), (255, 255, 255, 255))
+    font = ImageFont.truetype('./sarasa-fixed-cl-regular.TTF', 22)
+    # 初始化画笔
+    draw = ImageDraw.Draw(img)
+    # 实际尺寸
+    img_size = draw.multiline_textsize(str(table[0]), font=font)
+    actual_img = img.resize(img_size)
+    # 更新画笔
+    draw = ImageDraw.Draw(actual_img)
+    draw.multiline_text((0, 0), str(table[0]), font=font)
+    # 保存图片
+    target_path = os.getcwd().split('script')[0] + 'data/image/' + 'tmp.png'
+    actual_img.save(target_path)
 
-
-if __name__ == "__main__":
-    result = ''
-    price_history = {"7": 104,  "1PM": 78, "2AM": 117,  "3AM": 145, "3PM": 169}
-    # 共7天，从星期一到日
-    for i in range(1, 8):
-        key = str(i)
-        # 周日在开头（不用判断i是否为7，data_update中确保只有7能单独作为key）
-        if key in price_history:
-            result = str(price_history[key]) + ' ' + result
-        else:
-            # 搜索i的上午
-
-            if key + 'AM' in price_history:
-                result = result + str(price_history[key + 'AM']) + '/'
-            else:
-                result = result + '/'
-            # 搜索i的下午
-            if key + 'PM' in price_history:
-                result += str(price_history[key + 'PM']) + ' '
-            else:
-                result += ' '
-    print(result)
