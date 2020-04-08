@@ -1,4 +1,4 @@
-
+test/
 .idea/
 config.py
 __pycache__/
@@ -8,4 +8,5 @@ venv/
 *.html
 *.json
 *.png
-
+chromedriver
+chromedriver.exe
