@@ -26,18 +26,18 @@ async def price_submit(ctx: Context_T):
     # 格式正确则读取并继续程序
     target = ''
     if ctx['message_type'] == 'private':
-        target = str(ctx['user_id'])
+        target = ctx['user_id']
     elif ctx['message_type'] == 'group':
-        target = str(ctx['group_id'])
+        target = ctx['group_id']
     cur_price = int(flag.group(2))
     # 更新本地数据
-    price_history = data_update(cur_price, target)
+    price_history = data_update(cur_price, str(target))
     # 将结果转化为字符串
     string = to_string(price_history)
     # 上传至网页并返回结果
     table = submit_to_web(string)
     # 生成图片
-    await picture_process(table)
+    picture_process(table)
     # 发送图片
     if ctx['message_type'] == 'private':
         await bot.send_private_msg(user_id=target, message='[CQ:image,file=tmp.png]')
@@ -142,7 +142,7 @@ def submit_to_web(string: str):
     return table
     
 
-async def picture_process(table):
+def picture_process(table):
     # 初始化图片对象及字体
     img = Image.new('RGB', (0, 0), (255, 255, 255, 255))
     font = ImageFont.truetype('./sarasa-fixed-cl-regular.TTF', 22)
