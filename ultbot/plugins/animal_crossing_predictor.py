@@ -1,5 +1,6 @@
 import nonebot
 from datetime import datetime
+from datetime import timedelta
 import json
 import pathlib
 import os
@@ -20,7 +21,6 @@ bot = nonebot.get_bot()
 async def price_submit(ctx: Context_T):
     # 获得价格数据
     flag = re.match(r"^(t)(\d{1,3})$", ctx['raw_message'])
-    cur_price = 0
     if flag is None:
         # 格式错误，不响应
         return
@@ -76,9 +76,11 @@ async def update(session: CommandSession):
 def get_path(user_id):
     # 获取当前时间
     now = datetime.now(pytz.timezone('Asia/Shanghai')).isocalendar()
+    # 由于周日在大头菜计算中其实在下一周，因此在周日进行调用时应当指向下一周
+    if now[2] == '7':
+        now = (datetime.now(pytz.timezone('Asia/Shanghai'))+timedelta(days=1)).isocalendar()
     date_string = str(now[0]) + '-' + str(now[1])
-    return pathlib.Path('./animal_crossing_data/' + str(user_id) +
-                        '-' + date_string + '.json')
+    return pathlib.Path('./animal_crossing_data/' + str(user_id) + '-' + date_string + '.json')
 
 
 def daily_update(cur_price, user_id):
@@ -86,15 +88,17 @@ def daily_update(cur_price, user_id):
     path = get_path(user_id)
     # 存在则读取
     price_history = read_json(path)
-    # 获取当前时间
-    now = datetime.now(pytz.timezone('Asia/Shanghai'))
+    # 获取当前星期
+    calendar = datetime.now(pytz.timezone('Asia/Shanghai'))
+    now = calendar.isocalendar()[2]
+    ap = calendar.strftime('%p')
     key = ''
     # 周日不分上下午
-    # 更新价格信息, weekday返回0~6, 加1便于理解
-    if now.weekday() == 6:
-        key = str(now.weekday() + 1)
+    # 更新价格信息
+    if now == 7:
+        key = str(now)
     else:
-        key = str(now.weekday() + 1)+now.strftime('%p')
+        key = str(now)+ap
     price_history.update({key: cur_price})
     # 写入文件
     write_to_json(price_history, path)
