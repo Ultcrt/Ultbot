@@ -11,3 +11,4 @@ venv/
 *.ttf
 chromedriver
 chromedriver.exe
+test.py

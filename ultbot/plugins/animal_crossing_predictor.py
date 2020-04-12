@@ -77,7 +77,7 @@ def get_path(user_id):
     # 获取当前时间
     now = datetime.now(pytz.timezone('Asia/Shanghai')).isocalendar()
     # 由于周日在大头菜计算中其实在下一周，因此在周日进行调用时应当指向下一周
-    if now[2] == '7':
+    if now[2] == 7:
         now = (datetime.now(pytz.timezone('Asia/Shanghai'))+timedelta(days=1)).isocalendar()
     date_string = str(now[0]) + '-' + str(now[1])
     return pathlib.Path('./animal_crossing_data/' + str(user_id) + '-' + date_string + '.json')
