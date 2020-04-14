@@ -161,6 +161,7 @@ def submit_to_web(string: str):
     button.click()
     # 获取结果
     soup = BeautifulSoup(browser.page_source, "html.parser")
+    browser.quit()
     raw_body = soup.find('tbody', id='predictionTableBody')
     html_table = raw_body.parent
     raw_field = html_table.find('thead')
