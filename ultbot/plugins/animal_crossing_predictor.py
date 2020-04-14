@@ -46,7 +46,8 @@ async def update(session: CommandSession):
     user_id = session.event['user_id']
     path = get_path(user_id)
     price_history = read_json(path)
-    command_lines = session.current_arg_text.split(' ')
+    raw_command_lines = session.current_arg_text.strip()
+    command_lines = list(filter(None, raw_command_lines.split(' ')))
     if len(command_lines) == 0:
         await session.send('样例：/turnip del-1am,2am new-2am:0')
         return
