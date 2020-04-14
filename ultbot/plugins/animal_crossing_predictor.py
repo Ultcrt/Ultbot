@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 import prettytable
 from PIL import Image, ImageDraw, ImageFont
 from nonebot import on_command, CommandSession
+from time import process_time_ns as timer
 
 bot = nonebot.get_bot()
 
@@ -25,15 +26,25 @@ async def price_submit(ctx: Context_T):
         # 格式错误，不响应
         return
     # 格式正确则读取并继续程序
+    clock = timer()
     cur_price = int(flag.group(2))
+    print((timer()-clock)/1E9)
     # 更新本地数据
+    clock = timer()
     price_history = daily_update(cur_price, ctx['user_id'])
+    print((timer() - clock) / 1E9)
     # 将结果转化为字符串
+    clock = timer()
     string = to_string(price_history)
+    print((timer() - clock) / 1E9)
     # 上传至网页并返回结果
+    clock = timer()
     table = submit_to_web(string)
+    print((timer() - clock) / 1E9)
     # 生成图片
+    clock = timer()
     picture_process(table)
+    print((timer() - clock) / 1E9)
     # 发送图片
     if ctx['message_type'] == 'private':
         await bot.send_private_msg(user_id=ctx['user_id'], message='[CQ:image,file=tmp.png]')
@@ -124,7 +135,7 @@ def write_to_json(price_history: dict, path):
 def to_string(price_history):
     string = ''
     # 共7天，从星期一到日
-    for i in range(1,8):
+    for i in range(1, 8):
         key = str(i)
         # 周日在开头（不用判断i是否为7，data_update中确保只有7能单独作为key）
         if key in price_history:
