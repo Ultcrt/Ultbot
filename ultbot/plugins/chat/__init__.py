@@ -20,6 +20,8 @@ max_tokens = 4097
 
 prompt_ratio = 0.75
 
+min_tokens = 1024
+
 message_history = ""
 
 tokens_per_word = 3
@@ -67,7 +69,7 @@ async def request(prompt):
         completions = await openai.Completion.acreate(
             engine="text-davinci-003",
             prompt=message_history,
-            max_tokens=max_tokens - len(message_history) * tokens_per_word,
+            max_tokens=max(min_tokens, max_tokens - len(message_history) * tokens_per_word),
             n=1,
             stop=None,
             temperature=0.5,
