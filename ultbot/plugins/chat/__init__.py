@@ -80,8 +80,11 @@ async def request(prompt):
 
         return str(completions.choices[0].text).strip()
     except Exception as e:
-        message_history = ""
-        return "我被泥头车创了，记忆全丢了捏~：\n" + str(e)
+        if str(e).find("Please reduce your prompt"):
+            message_history = ""
+            return "我被泥头车创了，记忆全丢了捏~：\n" + str(e)
+        else:
+            return "这个不太会捏~：\n" + str(e)
 
 
 def get_waiting_reject_prompt():
