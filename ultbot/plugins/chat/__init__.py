@@ -82,7 +82,7 @@ async def request(prompt):
 
         return str(completions.choices[0].text).strip()
     except Exception as e:
-        if str(e).find("Please reduce your prompt"):
+        if str(e).find("Please reduce your prompt") != -1:
             message_history = ""
             return "我被泥头车创了，记忆全丢了捏~：\n" + str(e)
         else:
