@@ -18,7 +18,7 @@ scheduler = require('nonebot_plugin_apscheduler').scheduler
 
 local_record_path = "./data/eth_data/records.json"
 
-images_path = "W:/Program Files/go-http/data/images/"
+images_path = "./go-http/data/images/"
 
 plt_font = FontProperties(fname="./tools/sarasa-regular.ttc")
 
