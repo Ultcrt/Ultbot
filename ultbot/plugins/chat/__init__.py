@@ -14,7 +14,7 @@ last_request_time = 0
 
 openai.api_key = api_key
 
-two_step_chat = on_message(rule=regex(r"^你好~$"))
+two_step_chat = on_message(rule=regex(r"(^你好~$)|(^你好～$)"))
 
 max_tokens = 4097
 
@@ -32,7 +32,7 @@ async def chat(bot: Bot, event: Event):
     current_request_time = time.time()
 
     if current_request_time - last_request_time > request_time_gap:
-        await bot.send(event, "你好，想要聊什么呢？\n我只会等你30秒哦\n如果不想聊天了，要和我说“再见~”捏")
+        await bot.send(event, "你好，想要聊什么呢？\n我只会等你2min哦\n如果不想聊天了，要和我说“再见~”捏")
     else:
         await two_step_chat.finish(get_waiting_reject_prompt())
 
@@ -44,7 +44,7 @@ async def got_prompt(bot: Bot, event: Event, prompt: str = ArgStr()):
 
     current_request_time = time.time()
 
-    if prompt == "再见~":
+    if prompt == "再见~" or prompt == "再见～":
         message_history = ""
         await two_step_chat.finish("拜拜~")
 
@@ -72,7 +72,7 @@ async def request(prompt):
             max_tokens=max(min_tokens, max_tokens - len(message_history) * tokens_per_word),
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=1.2,
             timeout=request_time_gap
         )
 
@@ -84,9 +84,10 @@ async def request(prompt):
     except Exception as e:
         if str(e).find("Please reduce your prompt") != -1:
             message_history = ""
-            return "我被泥头车创了，记忆全丢了捏~：\n" + str(e)
+            return "我被泥头车创了，记忆全丢了捏~"
         else:
             return "这个不太会捏~：\n" + str(e)
+
 
 
 def get_waiting_reject_prompt():
