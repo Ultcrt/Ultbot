@@ -72,7 +72,7 @@ async def request(prompt):
             max_tokens=max(min_tokens, max_tokens - len(message_history) * tokens_per_word),
             n=1,
             stop=None,
-            temperature=1.2,
+            temperature=0.9,
             timeout=request_time_gap
         )
 
