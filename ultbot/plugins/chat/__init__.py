@@ -73,7 +73,7 @@ async def request(prompt, event: Event):
 
         completions = await openai.Completion.acreate(
             engine="text-davinci-003",
-            prompt="\n".join(session_info_dist[str(event.get_session_id())]["message_history"]),
+            prompt="\n".join(session_info_dist[str(event.get_session_id())]["message_history"]) + "\n",
             max_tokens=max(min_tokens, max_tokens - len(
                 "\n".join(session_info_dist[str(event.get_session_id())]["message_history"])
             ) * tokens_per_word),
