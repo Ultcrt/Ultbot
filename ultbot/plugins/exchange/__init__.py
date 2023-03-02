@@ -12,7 +12,7 @@ from .coingecko_api import exchange_list, get_exchange_rates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-from .private_config import group_id, bot_id
+from .private_config import supervisor_id, bot_id
 
 scheduler = require('nonebot_plugin_apscheduler').scheduler
 
@@ -84,8 +84,8 @@ async def eth_reminder(event=None):
                       eth_to_usd)
 
     if event is None:
-        await bot.call_api("send_group_msg",
-                           group_id=group_id,
+        await bot.call_api("send_private_msg",
+                           user_id=supervisor_id,
                            message=message_text)
     else:
         await bot.send(event, message_text)
@@ -142,8 +142,8 @@ async def eth_reminder(event=None):
                             "180天内：\n[CQ:image,file=eth_all.jpg]")
 
     if event is None:
-        await bot.call_api("send_group_msg",
-                           group_id=group_id,
+        await bot.call_api("send_private_msg",
+                           user_id=supervisor_id,
                            message=message_chart)
     else:
         await bot.send(event, message_chart)
